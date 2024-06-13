@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Video</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            margin-top: 150px;
+            background-image: url('https://static.vecteezy.com/system/resources/previews/022/875/313/large_2x/illustration-of-amazing-architecture-design-of-muslim-mosque-ramadan-kareem-islamic-architecture-background-ramadan-kareem-islamic-mosque-ramdan-ramzan-eid-culture-arab-generate-ai-free-photo.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: white;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+        }
+
+        .card-text {
+            margin-bottom: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card" th:each="video : ${videos}">
+        <div class="card-body">
+            <p class="card-text" th:text="${video.name}">Video Name</p>
+        </div>
+        <div class="video-container" th:attr="data-video-url=${video.videoUrl}">
+        </div>
+        <form th:method="post" th:action="@{/videos/{videoId}/delete(videoId=${video.id})}">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+
+    </div>
+    <div class="btn-container">
+        <a href="/videos/new" class="btn btn-primary">New Video</a>
+    </div>
+</div>
+<a class="btn" href="http://localhost:9080/home">Enter</a>
+
+<script th:inline="javascript">
+    <![CDATA[
+    var videos = [[${videos}]];
+    ]]>
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const videoContainers = document.querySelectorAll('.video-container');
+
+        videoContainers.forEach(container => {
+            const videoUrl = container.getAttribute('data-video-url');
+            const iframe = document.createElement('iframe');
+            iframe.title = 'YouTube video player';
+            iframe.type = 'text/html';
+            iframe.width = '640';
+            iframe.height = '390';
+            iframe.src = videoUrl;
+            iframe.frameborder = '0';
+            iframe.allowFullscreen = true;
+
+            container.appendChild(iframe);
+        });
+
+        console.log(videos);
+    });
+</script>
+
+</body>
+</html>
